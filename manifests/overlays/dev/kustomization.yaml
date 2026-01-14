@@ -1,0 +1,45 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      kind: Module
+      name: shs-all
+    patch: |
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/0/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-el9"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/1/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-fc39"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/2/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-fc40"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/3/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-fc41"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/4/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-fc42"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/5/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-fc43"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/6/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-fedora"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/7/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-ubuntu2404"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/8/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-ubuntu2404"
+      - op: replace
+        path: /spec/moduleLoader/container/kernelMappings/9/containerImage
+        value: "localhost:5000/shs-kmod:${KERNEL_FULL_VERSION}-ubuntu2204"
+
+labels:
+  - pairs:
+      app.kubernetes.io/environment: dev

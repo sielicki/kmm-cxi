@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shs-all-dockerfile
+  namespace: kmm-cxi
+data:
+  Dockerfile: |
+    # HPE Slingshot Host Software - All Kernel Modules
+    # Builds all SHS kernel modules in a single image:
+    #   - cxi-sl.ko (Slingshot Link driver - Cassini 2)
+    #   - cxi-ss1.ko (Main CXI driver)
+    #   - cxi-eth.ko (CXI Ethernet driver)
+    #   - cxi-user.ko (CXI userspace interface)
+    #   - kfabric.ko (Kernel Fabric Interface)
+    #   - kfi_cxi.ko (KFI CXI provider)
+    #
+    # KERNEL COMPATIBILITY: Linux 5.14.x - 6.13.x
+    # Fedora 40+ (6.14+) not yet supported due to kernel API changes
+
+    ARG BASE_IMAGE=rockylinux:9
+    ARG KERNEL_FULL_VERSION
+
+    # HPE repo commits (pinned via flake.lock, injected at deploy time)
+    ARG SHS_CASSINI_HEADERS_REV=main
+    ARG SHS_FIRMWARE_REV=main
+    ARG SS_SBL_REV=main
+    ARG SS_LINK_REV=main
+    ARG SHS_CXI_DRIVER_REV=main
+    ARG SHS_KFABRIC_REV=main
+
+    FROM docker.io/${BASE_IMAGE} AS builder
+
+    ARG KERNEL_FULL_VERSION
+    ARG BASE_IMAGE
+    ARG SHS_CASSINI_HEADERS_REV
+    ARG SHS_FIRMWARE_REV
+    ARG SS_SBL_REV
+    ARG SS_LINK_REV
+    ARG SHS_CXI_DRIVER_REV
+    ARG SHS_KFABRIC_REV
+
+    ENV KDIR=/lib/modules/${KERNEL_FULL_VERSION}/build
+
+    # Install build dependencies based on distro
+    RUN if echo "${BASE_IMAGE}" | grep -q "ubuntu"; then \
+            export DEBIAN_FRONTEND=noninteractive && \
+            apt-get update && apt-get install -y \
+            git make gcc bc flex bison libelf-dev libssl-dev kmod \
+            linux-headers-${KERNEL_FULL_VERSION} && \
+            rm -rf /var/lib/apt/lists/*; \
+        elif echo "${BASE_IMAGE}" | grep -qE "fedora|coreos"; then \
+            dnf install -y git make gcc \
+            kernel-devel-${KERNEL_FULL_VERSION} \
+            elfutils-libelf-devel bc flex bison perl openssl-devel && \
+            dnf clean all && \
+            mkdir -p /lib/modules/${KERNEL_FULL_VERSION} && \
+            ln -sf /usr/src/kernels/${KERNEL_FULL_VERSION} /lib/modules/${KERNEL_FULL_VERSION}/build; \
+        elif echo "${BASE_IMAGE}" | grep -qE "rocky|alma|centos"; then \
+            dnf install -y epel-release && \
+            dnf install -y git make gcc \
+            kernel-devel-${KERNEL_FULL_VERSION} \
+            kernel-headers-${KERNEL_FULL_VERSION} \
+            elfutils-libelf-devel bc flex bison perl && \
+            dnf clean all && \
+            mkdir -p /lib/modules/${KERNEL_FULL_VERSION} && \
+            ln -sf /usr/src/kernels/${KERNEL_FULL_VERSION} /lib/modules/${KERNEL_FULL_VERSION}/build; \
+        fi
+
+    WORKDIR /build
+
+    # Clone HPE SHS repositories at pinned commits
+    RUN git clone https://github.com/HewlettPackard/shs-cassini-headers.git && \
+        cd shs-cassini-headers && git checkout ${SHS_CASSINI_HEADERS_REV} && cd ..
+    RUN git clone https://github.com/HewlettPackard/shs-firmware-cassini2-devel.git && \
+        cd shs-firmware-cassini2-devel && git checkout ${SHS_FIRMWARE_REV} && cd ..
+    RUN git clone https://github.com/HewlettPackard/ss-sbl.git && \
+        cd ss-sbl && git checkout ${SS_SBL_REV} && cd ..
+    RUN git clone https://github.com/HewlettPackard/ss-link.git && \
+        cd ss-link && git checkout ${SS_LINK_REV} && cd ..
+    RUN git clone https://github.com/HewlettPackard/shs-cxi-driver.git && \
+        cd shs-cxi-driver && git checkout ${SHS_CXI_DRIVER_REV} && cd ..
+    RUN git clone https://github.com/HewlettPackard/shs-kfabric.git && \
+        cd shs-kfabric && git checkout ${SHS_KFABRIC_REV} && cd ..
+
+    # Set up header paths
+    RUN mkdir -p /build/cassini-headers/install && \
+        cp -r /build/shs-cassini-headers/include /build/cassini-headers/install/ && \
+        mkdir -p /build/firmware_cassini/lib && \
+        cp -r /build/shs-firmware-cassini2-devel/lib/* /build/firmware_cassini/lib/
+
+    # Build ss-link (cxi-sl.ko)
+    WORKDIR /build/ss-link
+    RUN cp ./common/configs/config.mak.cassini ./config.mak && \
+        make KDIR=/lib/modules/${KERNEL_FULL_VERSION}/build
+
+    # Set up ss-sbl headers and Module.symvers
+    RUN mkdir -p /build/ss-sbl/staging_dir/usr/include/linux && \
+        cp -r /build/ss-sbl/uapi /build/ss-sbl/staging_dir/usr/include/ && \
+        cp /build/ss-sbl/*.h /build/ss-sbl/staging_dir/usr/include/ && \
+        cp /build/ss-sbl/*.h /build/ss-sbl/staging_dir/usr/include/linux/ && \
+        touch /build/ss-sbl/Module.symvers
+
+    # Set up symlinks for cxi-driver
+    RUN mkdir -p /build/shs-cxi-driver/drivers/net/ethernet && \
+        ln -sf /build/ss-link /build/shs-cxi-driver/drivers/net/ethernet/sl-driver && \
+        ln -sf /build/ss-sbl /build/shs-cxi-driver/drivers/net/ethernet/slingshot_base_link && \
+        ln -sf /build/ss-link /build/sl-driver && \
+        ln -sf /build/ss-sbl /build/slingshot_base_link
+
+    # Build CXI driver (cxi-ss1.ko, cxi-eth.ko, cxi-user.ko)
+    WORKDIR /build/shs-cxi-driver
+    RUN make -C drivers/net/ethernet/hpe/ss1 \
+        KDIR=/lib/modules/${KERNEL_FULL_VERSION}/build \
+        TOPDIR=/build/shs-cxi-driver/drivers/net/ethernet/hpe \
+        NO_BUILD_TESTS=1 \
+        KBUILD_MODPOST_WARN=1
+
+    # Set up symlink for kfabric
+    RUN ln -sf /build/shs-cxi-driver /build/cxi-driver
+
+    # Build kfabric (kfabric.ko, kfi_cxi.ko)
+    WORKDIR /build/shs-kfabric
+    RUN make \
+        KDIR=/lib/modules/${KERNEL_FULL_VERSION}/build \
+        KBUILD_MODPOST_WARN=1
+
+    # Final minimal image
+    ARG BASE_IMAGE
+    FROM docker.io/${BASE_IMAGE}
+
+    ARG KERNEL_FULL_VERSION
+    ARG BASE_IMAGE
+
+    # Install kmod
+    RUN if echo "${BASE_IMAGE}" | grep -q "ubuntu"; then \
+            apt-get update && apt-get install -y kmod && rm -rf /var/lib/apt/lists/*; \
+        elif echo "${BASE_IMAGE}" | grep -qE "fedora|coreos"; then \
+            dnf install -y kmod && dnf clean all; \
+        elif echo "${BASE_IMAGE}" | grep -qE "rocky|alma|centos"; then \
+            if command -v microdnf >/dev/null 2>&1; then \
+                microdnf install -y kmod && microdnf clean all; \
+            else \
+                dnf install -y kmod && dnf clean all; \
+            fi; \
+        fi
+
+    RUN mkdir -p /opt/lib/modules/${KERNEL_FULL_VERSION} /opt/lib/firmware
+
+    # Copy all kernel modules
+    COPY --from=builder /build/ss-link/drivers/net/ethernet/hpe/sl/cxi-sl.ko \
+        /opt/lib/modules/${KERNEL_FULL_VERSION}/
+    COPY --from=builder /build/shs-cxi-driver/drivers/net/ethernet/hpe/ss1/cxi-ss1.ko \
+        /opt/lib/modules/${KERNEL_FULL_VERSION}/
+    COPY --from=builder /build/shs-cxi-driver/drivers/net/ethernet/hpe/ss1/cxi-eth.ko \
+        /opt/lib/modules/${KERNEL_FULL_VERSION}/
+    COPY --from=builder /build/shs-cxi-driver/drivers/net/ethernet/hpe/ss1/cxi-user.ko \
+        /opt/lib/modules/${KERNEL_FULL_VERSION}/
+    COPY --from=builder /build/shs-kfabric/kfi/kfabric.ko \
+        /opt/lib/modules/${KERNEL_FULL_VERSION}/
+    COPY --from=builder /build/shs-kfabric/prov/cxi/kfi_cxi.ko \
+        /opt/lib/modules/${KERNEL_FULL_VERSION}/
+
+    # Copy firmware
+    COPY --from=builder /build/ss-link/drivers/net/ethernet/hpe/sl/core/hw/ucode/*.bin \
+        /opt/lib/firmware/
+
+    RUN depmod -b /opt ${KERNEL_FULL_VERSION}

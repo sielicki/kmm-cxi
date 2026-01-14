@@ -1,0 +1,180 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1768127708,
+        "narHash": "sha256-1Sm77VfZh3mU0F5OqKABNLWxOuDeHIlcFjsXeeiPazs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ffbc9f8cbaacfb331b6017d5a5abb21a492c9a38",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "shs-cassini-headers": "shs-cassini-headers",
+        "shs-cxi-driver": "shs-cxi-driver",
+        "shs-firmware-cassini2-devel": "shs-firmware-cassini2-devel",
+        "shs-kdreg2": "shs-kdreg2",
+        "shs-kfabric": "shs-kfabric",
+        "ss-link": "ss-link",
+        "ss-sbl": "ss-sbl"
+      }
+    },
+    "shs-cassini-headers": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1765910941,
+        "narHash": "sha256-qkk0cMIHRq51D4Nqi2EuTn5kS/me67fNCk4gw6wOmRw=",
+        "owner": "HewlettPackard",
+        "repo": "shs-cassini-headers",
+        "rev": "96e971c9cf26c8fa3aa2f33be55fc36f25055b14",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HewlettPackard",
+        "repo": "shs-cassini-headers",
+        "type": "github"
+      }
+    },
+    "shs-cxi-driver": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1765819995,
+        "narHash": "sha256-Wy0/b1Sw5hsfpg3ZNKA+PbIkEHSQfAGSvoadpNaZQN8=",
+        "owner": "HewlettPackard",
+        "repo": "shs-cxi-driver",
+        "rev": "e079a47c1b4a80493da65956be63f5004d94c911",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HewlettPackard",
+        "repo": "shs-cxi-driver",
+        "type": "github"
+      }
+    },
+    "shs-firmware-cassini2-devel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1768322359,
+        "narHash": "sha256-FVu1Tbe3flOYA1gcdxzbpxyvpJ/K9XbwZ/7pJgLonfo=",
+        "owner": "HewlettPackard",
+        "repo": "shs-firmware-cassini2-devel",
+        "rev": "f68f53bb1b5efd260c4c73c0aeb96186bcce4eab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HewlettPackard",
+        "repo": "shs-firmware-cassini2-devel",
+        "type": "github"
+      }
+    },
+    "shs-kdreg2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1764970639,
+        "narHash": "sha256-sszj6xWqtMY1u78zEbb58pCeNs2dSk77dfaW+/rZQTU=",
+        "owner": "HewlettPackard",
+        "repo": "shs-kdreg2",
+        "rev": "9a31fe2457a8a6a909d5b334ff0a37372de8036c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HewlettPackard",
+        "repo": "shs-kdreg2",
+        "type": "github"
+      }
+    },
+    "shs-kfabric": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1764190645,
+        "narHash": "sha256-Gi3zTMUMAp4Jdgy6k1aZe6SV1/nV6COb2V6nHl/Alg8=",
+        "owner": "HewlettPackard",
+        "repo": "shs-kfabric",
+        "rev": "0801b2ceb5767a860ba6e04e1d346f4f51cae722",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HewlettPackard",
+        "repo": "shs-kfabric",
+        "type": "github"
+      }
+    },
+    "ss-link": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767729229,
+        "narHash": "sha256-ZEQQPjE0eOGRHEy6UE2o7dGR+447a7Ep/K/MMC7zzWY=",
+        "owner": "HewlettPackard",
+        "repo": "ss-link",
+        "rev": "bae3458fac0421e4ff46c9af0e4dafb2148e8cd1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HewlettPackard",
+        "repo": "ss-link",
+        "type": "github"
+      }
+    },
+    "ss-sbl": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763142730,
+        "narHash": "sha256-54Zr1Pr13GR2HUhWjLDXdr8yzop6i5FO3+2Zq4GvzM8=",
+        "owner": "HewlettPackard",
+        "repo": "ss-sbl",
+        "rev": "c2ae7cdbb819572e90fad082f8a2dbb97e090fac",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HewlettPackard",
+        "repo": "ss-sbl",
+        "type": "github"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

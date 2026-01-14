@@ -1,0 +1,320 @@
+apiVersion: kmm.sigs.x-k8s.io/v1beta1
+kind: Module
+metadata:
+  name: shs-all
+  namespace: kmm-cxi
+spec:
+  moduleLoader:
+    container:
+      modprobe:
+        moduleName: kfi_cxi
+        dirName: /opt
+        modulesLoadingOrder:
+          - kfi_cxi
+          - kfabric
+          - cxi_user
+          - cxi_eth
+          - cxi_ss1
+          - cxi_sl
+      kernelMappings:
+        # RHEL 9 / Rocky 9 kernels
+        - regexp: '^5\.14\.0-.*\.el9.*\.x86_64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-el9"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "rockylinux:9"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Fedora 39 kernels
+        - regexp: '^6\.[0-9]+\.[0-9]+-[0-9]+\.fc39\.x86_64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-fc39"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "fedora:39"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Fedora 40 kernels
+        - regexp: '^6\.[0-9]+\.[0-9]+-[0-9]+\.fc40\.x86_64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-fc40"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "fedora:40"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Fedora 41 kernels
+        - regexp: '^6\.[0-9]+\.[0-9]+-[0-9]+\.fc41\.x86_64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-fc41"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "fedora:41"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Fedora 42 kernels
+        - regexp: '^6\.[0-9]+\.[0-9]+-[0-9]+\.fc42\.x86_64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-fc42"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "fedora:42"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Fedora 43 kernels
+        - regexp: '^6\.[0-9]+\.[0-9]+-[0-9]+\.fc43\.x86_64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-fc43"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "fedora:43"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Fedora Rawhide / FCOS kernels (fc44+)
+        - regexp: '^6\.[0-9]+\.[0-9]+-[0-9]+\.fc[0-9]+\.x86_64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-fedora"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "fedora:rawhide"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Ubuntu 24.04 kernels (6.8.x)
+        - regexp: '^6\.8\.[0-9]+-[0-9]+-generic$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-ubuntu2404"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "ubuntu:24.04"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Ubuntu 24.04 HWE/newer kernels (6.9+)
+        - regexp: '^6\.(9|10|11|12|13)\.[0-9]+-[0-9]+-generic$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-ubuntu2404"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "ubuntu:24.04"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Ubuntu 22.04 kernels (5.15.x GA)
+        - regexp: '^5\.15\.0-[0-9]+-generic$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-ubuntu2204"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "ubuntu:22.04"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # Debian 12 (Bookworm) kernels (6.1.x)
+        - regexp: '^6\.1\.[0-9]+-[0-9]+-amd64$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-debian12"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "debian:12"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # openSUSE Leap 15.6 kernels (6.4.x with -default suffix)
+        - regexp: '^6\.4\.[0-9]+-[0-9.]+-default$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-leap156"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "opensuse/leap:15.6"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+        # openSUSE Tumbleweed kernels (rolling, with -default suffix)
+        - regexp: '^[0-9]+\.[0-9]+\.[0-9]+-[0-9.]+-default$'
+          containerImage: "ghcr.io/OWNER/shs-kmod:${KERNEL_FULL_VERSION}-tumbleweed"
+          build:
+            dockerfileConfigMap:
+              name: shs-all-dockerfile
+            buildArgs:
+              - name: KERNEL_FULL_VERSION
+                value: "${KERNEL_FULL_VERSION}"
+              - name: BASE_IMAGE
+                value: "opensuse/tumbleweed"
+              - name: SHS_CASSINI_HEADERS_REV
+                value: "__SHS_CASSINI_HEADERS_REV__"
+              - name: SHS_FIRMWARE_REV
+                value: "__SHS_FIRMWARE_REV__"
+              - name: SS_SBL_REV
+                value: "__SS_SBL_REV__"
+              - name: SS_LINK_REV
+                value: "__SS_LINK_REV__"
+              - name: SHS_CXI_DRIVER_REV
+                value: "__SHS_CXI_DRIVER_REV__"
+              - name: SHS_KFABRIC_REV
+                value: "__SHS_KFABRIC_REV__"
+  selector:
+    node-role.kubernetes.io/worker: ""

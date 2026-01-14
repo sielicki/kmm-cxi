@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: kmm-cxi
+
+resources:
+  - namespace.yaml
+  - configmap-shs-all-dockerfile.yaml
+  - module-shs-all.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: kmm-cxi
+      app.kubernetes.io/managed-by: kustomize

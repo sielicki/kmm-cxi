@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "America/Los_Angeles",
+  "schedule": ["before 7am"],
+  "nix": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 7am every day"],
+    "automerge": true,
+    "automergeType": "pr",
+    "platformAutomerge": true
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["nix"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true,
+      "commitMessageTopic": "flake input {{depName}}",
+      "commitMessageExtra": "to {{newVersion}}"
+    }
+  ],
+  "prBodyTemplate": "{{{table}}}\n\n{{{notes}}}\n\n{{{changelogs}}}\n\n{{{controls}}}\n\n{{{footer}}}",
+  "prBodyColumns": ["Package", "Update", "Change"],
+  "prBodyNotes": ["This PR updates the Nix flake inputs pinned in `flake.lock`."]
+}
